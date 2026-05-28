@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForgeMind // Planos de Creación Colectiva</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+        <header style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.8); padding: 20px 40px; border-bottom: 1px solid #1e293b;">
+        <h1 style="background: linear-gradient(45deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-size: 26px; font-weight: 800;">🛠️ ForgeMind</h1>
+        
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <!-- Formulario 1: Registro de Clientes Nuevos -->
+            <form action="/api/registrar" method="POST" style="display: flex; gap: 8px; align-items: center; background: #111827; padding: 10px; border-radius: 12px; border: 1px solid #233148;">
+                <span style="font-size: 12px; color: #4facfe; font-weight: bold; padding: 0 5px;">REGISTRO:</span>
+                <input type="text" id="inputNombre" name="nombre" placeholder="Usuario" required style="width: 100px; padding: 6px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
+                <input type="password" name="password" placeholder="Clave" required style="width: 100px; padding: 6px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
+                <select name="plan" style="padding: 6px; border-radius: 6px; background: #0b0f19; color: white; border: none;">
+                    <option value="express">Express ($20)</option>
+                    <option value="basico">Maker ($80)</option>
+                    <option value="pro">Developer ($150)</option>
+                </select>
+                <button type="submit" onclick="guardarSesionLocal()" style="background: #4facfe; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0b0f19;">Unirse</button>
+            </form>
+
+            <!-- Formulario 2: Ingreso de Clientes Existentes -->
+            <form action="/api/login" method="POST" style="display: flex; gap: 8px; align-items: center; background: #111827; padding: 10px; border-radius: 12px; border: 1px solid #233148;">
+                <span style="font-size: 12px; color: #00f2fe; font-weight: bold; padding: 0 5px;">INGRESO:</span>
+                <input type="text" name="nombre" placeholder="Usuario" required style="width: 100px; padding: 6px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
+                <input type="password" name="password" placeholder="Clave" required style="width: 100px; padding: 6px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
+                <button type="submit" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0b0f19;">Entrar</button>
+            </form>
+        </div>
+    </header>
+
+        
+        <!-- Formulario Real de Registro de Clientes -->
+        <form action="/api/registrar" method="POST" style="display: flex; gap: 10px; align-items: center; background: #111827; padding: 10px; border-radius: 12px; border: 1px solid #334155;">
+            <input type="text" id="inputNombre" name="nombre" placeholder="Nombre de Usuario" required style="padding: 8px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
+            <input type="password" name="password" placeholder="Contraseña" required style="padding: 8px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
+            
+            <select name="plan" id="selectPlan" style="padding: 8px; border-radius: 6px; background: #0b0f19; color: white; border: none;">
+                <option value="espectador">Modo Espectador (Gratis)</option>
+                <option value="express">Acceso Express ($20 MXN)</option>
+                <option value="basico">Nivel Maker ($80 MXN)</option>
+                <option value="pro">Nivel Developer ($150 MXN)</option>
+            </select>
+            
+            <button type="submit" onclick="guardarSesionLocal()" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0b0f19;">Crear Cuenta</button>
+        </form>
+    </header>
+
+    <main class="blueprint-grid" style="display: flex; flex-wrap: wrap; gap: 25px; padding: 40px; justify-content: center;">
+        
+        <!-- Tarjeta de Contenido Tecnológico -->
+        <div class="project-block" style="background: #111827; border: 1px solid #1e293b; border-radius: 20px; width: 320px; padding: 24px;">
+            <h3 style="font-size: 20px; color: white; margin-top: 0;">Mesa Flotante de Ingeniería</h3>
+            <p style="font-size: 14px; color: #94a3b8; line-height: 1.5;">Estructura suspendida por tensión física. Incluye video tutorial y planos.</p>
+            
+           <!-- Botón Inteligente 1: Compra de Herramientas ($20 MXN) -->
+<form action="/api/checkout" method="POST" style="margin-bottom:12px;">
+    <input type="hidden" name="plan" value="express">
+    <input type="hidden" name="precio" value="20">
+    <input type="hidden" id="usuarioPay1" name="usuario" value="">
+    <button type="submit" class="btn-action btn-unlock" style="width:100%; border:none; cursor:pointer; padding:12px; font-weight:bold; border-radius:12px;">🔌 Adquirir Kit de Componentes ($20 MXN)</button>
+</form>
+
+<!-- Botón Inteligente 2: Compra de Video y Guía ($80 MXN) -->
+<form action="/api/checkout" method="POST">
+    <input type="hidden" name="plan" value="basico">
+    <input type="hidden" name="precio" value="80">
+    <input type="hidden" id="usuarioPay2" name="usuario" value="">
+    <button type="submit" class="btn-action btn-blueprint" style="width:100%; border:1px solid #334155; cursor:pointer; padding:12px; font-weight:bold; border-radius:12px; background:#1e293b; color:#94a3b8;">⚡ Desbloquear Video y Pasos ($80 MXN)</button>
+</form>
+ 
+           
+        </div>
+
+    </main>
+
+    <script>
+        // Este script vincula automáticamente tus clics con el usuario creado
+        function guardarSesionLocal() {
+            const usuario = document.getElementById('inputNombre').value;
+            if(usuario) localStorage.setItem('usuario_forgemind', usuario);
+        }
+
+        function incrustarUsuarioEnBotones() {
+    const usuarioGuardado = localStorage.getItem('usuario_forgemind') || '';
+    // Avisa a los formularios de cobro quién está intentando comprar
+    const campo1 = document.getElementById('usuarioPay1');
+    const campo2 = document.getElementById('usuarioPay2');
+    if(campo1) campo1.value = usuarioGuardado;
+    if(campo2) campo2.value = usuarioGuardado;
+}
+// Ejecuta la revisión cada medio segundo automáticamente
+setInterval(incrustarUsuarioEnBotones, 500);
+
+                       
+            
+            
+            
+        
+      
+    </script>
+</body>
+</html>
