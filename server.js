@@ -1,64 +1,59 @@
 const express = require('express');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const app = express();
-const PORT = 3000;
+const path = require('path');
+const { MercadoPagoConfig, Preference } = require('mercadopago');
 
+// Habilitar que el servidor entienda datos en formato JSON
 app.use(express.json());
-app.use(express.static(__dirname));
 
-// Escudos de Ciberseguridad
-app.use(helmet({
-    contentSecurityPolicy: false // Permite conectar con Stripe y Amazon sin bloqueos
-}));
+// Servir los archivos estáticos de tu diseño desde la carpeta public
+app.use(express.static(path.join(__dirname, 'public')));
 
-const limitador = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: '🔒 Demasiados intentos desde esta IP. Bloqueado por seguridad.'
+// Configuración de Mercado Pago usando tu variable segura en internet
+const client = new MercadoPagoConfig({ 
+    accessToken: process.env.MERCADOPAGO_TOKEN 
 });
-app.use('/api/', limitador);
 
-// Base de Datos Local Simulada
-const obtenerUsuarios = () => {
-    return { "usuario_prueba": { guiasCompradas: [] } }; 
-};
-
-// Ruta para la página principal
+// RUTA 1: Para mostrar la página principal
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// CATÁLOGO DE GUÍAS (PINTEREST DE REPARACIONES)
-const guiasReparacion = {
-    "reparar-abanico": {
-        titulo: "Cómo reparar un abanico que no gira",
-        esPremium: true,
-        mensaje: "🔒 Esta guía es Premium. Adquiérela para desbloquear el video completo.",
-        videoCortoUrl: "https://tu-almacenamiento.com",
-        materialesAfiliado: [
-            { nombre: "Capacitor de repuesto para abanico", enlace: "https://amazon.com" },
-            { nombre: "Aceite lubricante multiusos", enlace: "https://amazon.com" },
-            { nombre: "Juego de destornilladores de precisión", enlace: "https://amazon.com" }
-        ]
+// RUTA 2: EL MOTOR DE COBROS REALES
+app.post('/api/crear-pago', async (req, res) => {
+    try {
+        const { id_guia, nombre_guia, precio } = req.body;
+
+        const preference = new Preference(client);
+        const response = await preference.create({
+            body: {
+                items: [
+                    {
+                        title: nombre_guia,
+                        quantity: 1,
+                        unit_price: Number(precio),
+                        currency_id: 'MXN' // Pesos Mexicanos
+                    }
+                ],
+                back_urls: {
+                    success: 'https://onrender.com',
+                    failure: 'https://onrender.com',
+                    pending: 'https://onrender.com'
+                },
+                auto_return: 'approved',
+            }
+        });
+
+        // Enviamos el enlace de pago seguro generado por Mercado Pago
+        res.json({ id: response.id, init_point: response.init_point });
+    } catch (error) {
+        console.error('Error en Mercado Pago:', error);
+        res.status(500).json({ error: 'Error al procesar el botón de pago' });
     }
-    
-};
-
-// Ruta para consultar la guía
-app.get('/api/guias/:id', (req, res) => {
-    const { id } = req.params;
-    const { usuario } = req.query;
-    const guia = guiasReparacion[id];
-    if (!guia) return res.status(404).json({ error: '⚠️ La guía no existe.' });
-    return res.json(guia);
 });
 
-// API para procesar pagos con Stripe
-app.post('/api/crear-sesion-pago', (req, res) => {
-    return res.json({ url: 'https://stripe.com' });
-});
-
+// Arrancar el servidor definitivo en internet o local
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor definitivo corriendo en http://localhost:${PORT}`);
 });
