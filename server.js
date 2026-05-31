@@ -21,8 +21,13 @@ app.use('/api/', limitador);
 
 // Base de Datos Local Simulada
 const obtenerUsuarios = () => {
-    return { "usuario_prueba": { guiasCompradas: [] } };
+    return { "usuario_prueba": { guiasCompradas: [] } }; 
 };
+
+// Ruta para la página principal
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
 // CATÁLOGO DE GUÍAS (PINTEREST DE REPARACIONES)
 const guiasReparacion = {
@@ -37,6 +42,7 @@ const guiasReparacion = {
             { nombre: "Juego de destornilladores de precisión", enlace: "https://amazon.com" }
         ]
     }
+    
 };
 
 // Ruta para consultar la guía
