@@ -54,6 +54,31 @@ app.post('/api/crear-pago', async (req, res) => {
 
 // Arrancar el servidor definitivo en internet o local
 const PORT = process.env.PORT || 3000;
+// RUTA 3: SISTEMA DE LOGIN PARA TUS USUARIOS
+app.post('/api/login', (req, res) => {
+    try {
+        const { usuario, password } = req.body;
+        
+        // Aquí puedes poner tu lógica de validación. 
+        // Por ahora, validamos un usuario de prueba para que jale al 100%:
+        if (usuario === "admin" && password === "1234") {
+            return res.json({ 
+                success: true, 
+                mensaje: "¡Bienvenido de nuevo!",
+                user: { usuario: "admin", guiasCompradas: [] }
+            });
+        } else {
+            return res.status(401).json({ 
+                success: false, 
+                error: "⚠️ Usuario o contraseña incorrectos." 
+            });
+        }
+    } catch (error) {
+        console.error('Error en el Login:', error);
+        res.status(500).json({ error: 'Error interno en el servidor de inicio de sesión' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 Servidor definitivo corriendo en http://localhost:${PORT}`);
 });
