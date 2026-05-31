@@ -45,10 +45,46 @@ app.post('/api/crear-pago', async (req, res) => {
         });
 
         // Enviamos el enlace de pago seguro generado por Mercado Pago
+                // Enviamos el enlace de pago seguro generado por Mercado Pago
         res.json({ id: response.id, init_point: response.init_point });
     } catch (error) {
         console.error('Error en Mercado Pago:', error);
         res.status(500).json({ error: 'Error al procesar el botón de pago' });
+    }
+}); // <-- AQUÍ TERMINA LA RUTA 2
+
+// RUTA 3: SISTEMA DE LOGIN SEGURO PARA EL ADMINISTRADOR
+app.post('/api/login', (req, res) => {
+    try {
+        const { usuario, password } = req.body;
+        
+        // El servidor compara los datos usando tus llaves ocultas de Render
+        if (usuario === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
+            return res.json({ 
+                success: true, 
+                mensaje: "¡Bienvenido de nuevo, socio!",
+                user: { usuario: usuario, guiasCompradas: [] }
+            });
+        } else {
+            return res.status(401).json({ 
+                success: false, 
+                error: "⚠️ Usuario o contraseña incorrectos." 
+            });
+        }
+    } catch (error) {
+        console.error('Error en el Login:', error);
+        res.status(500).json({ error: 'Error interno en el servidor de inicio de sesión' });
+    }
+}); // <-- AQUÍ TERMINA LA RUTA 3
+
+// Arrancar el servidor definitivo en internet o local
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor definitivo corriendo en http://localhost:${PORT}`);
+});
+
+    } 
+            
     }
 });
 
