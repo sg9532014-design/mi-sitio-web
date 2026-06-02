@@ -8,7 +8,7 @@
 </head>
 <body>
 
-        <header style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.8); padding: 20px 40px; border-bottom: 1px solid #1e293b;">
+    <header style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.8); padding: 20px 40px; border-bottom: 1px solid #1e293b;">
         <h1 style="background: linear-gradient(45deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-size: 26px; font-weight: 800;">🛠️ ForgeMind</h1>
         
         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -22,7 +22,7 @@
                     <option value="basico">Maker ($80)</option>
                     <option value="pro">Developer ($150)</option>
                 </select>
-                <button type="submit" onclick="guardarSesionLocal()" style="background: #4facfe; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0b0f19;">Unirse</button>
+                <button type="submit" onclick="guardarSesionLocal()" style="background: #4facfe; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0b0b19;">Unirse</button>
             </form>
 
             <!-- Formulario 2: Ingreso de Clientes Existentes -->
@@ -35,23 +35,6 @@
         </div>
     </header>
 
-        
-        <!-- Formulario Real de Registro de Clientes -->
-        <form action="/api/registrar" method="POST" style="display: flex; gap: 10px; align-items: center; background: #111827; padding: 10px; border-radius: 12px; border: 1px solid #334155;">
-            <input type="text" id="inputNombre" name="nombre" placeholder="Nombre de Usuario" required style="padding: 8px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
-            <input type="password" name="password" placeholder="Contraseña" required style="padding: 8px; border-radius: 6px; border: none; background: #0b0f19; color: white;">
-            
-            <select name="plan" id="selectPlan" style="padding: 8px; border-radius: 6px; background: #0b0f19; color: white; border: none;">
-                <option value="espectador">Modo Espectador (Gratis)</option>
-                <option value="express">Acceso Express ($20 MXN)</option>
-                <option value="basico">Nivel Maker ($80 MXN)</option>
-                <option value="pro">Nivel Developer ($150 MXN)</option>
-            </select>
-            
-            <button type="submit" onclick="guardarSesionLocal()" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #0b0f19;">Crear Cuenta</button>
-        </form>
-    </header>
-
     <main class="blueprint-grid" style="display: flex; flex-wrap: wrap; gap: 25px; padding: 40px; justify-content: center;">
         
         <!-- Tarjeta de Contenido Tecnológico -->
@@ -59,51 +42,60 @@
             <h3 style="font-size: 20px; color: white; margin-top: 0;">Mesa Flotante de Ingeniería</h3>
             <p style="font-size: 14px; color: #94a3b8; line-height: 1.5;">Estructura suspendida por tensión física. Incluye video tutorial y planos.</p>
             
-           <!-- Botón Inteligente 1: Compra de Herramientas ($20 MXN) -->
-<form action="/api/checkout" method="POST" style="margin-bottom:12px;">
-    <input type="hidden" name="plan" value="express">
-    <input type="hidden" name="precio" value="20">
-    <input type="hidden" id="usuarioPay1" name="usuario" value="">
-    <button type="submit" class="btn-action btn-unlock" style="width:100%; border:none; cursor:pointer; padding:12px; font-weight:bold; border-radius:12px;">🔌 Adquirir Kit de Componentes ($20 MXN)</button>
-</form>
+            <!-- Botón Inteligente 1: Cobro de $20 MXN conectado a Mercado Pago -->
+            <div style="margin-bottom:12px;">
+                <button onclick="comprarGuia('kit_express', '🔌 Adquirir Kit de Componentes', 20)" class="btn-action btn-unlock" style="width:100%; border:none; cursor:pointer; padding:12px; font-weight:bold; border-radius:12px; background: #4facfe; color: #0b0f19;">🔌 Adquirir Kit de Componentes ($20 MXN)</button>
+            </div>
 
-<!-- Botón Inteligente 2: Compra de Video y Guía ($80 MXN) -->
-<form action="/api/checkout" method="POST">
-    <input type="hidden" name="plan" value="basico">
-    <input type="hidden" name="precio" value="80">
-    <input type="hidden" id="usuarioPay2" name="usuario" value="">
-    <button type="submit" class="btn-action btn-blueprint" style="width:100%; border:1px solid #334155; cursor:pointer; padding:12px; font-weight:bold; border-radius:12px; background:#1e293b; color:#94a3b8;">⚡ Desbloquear Video y Pasos ($80 MXN)</button>
-</form>
- 
-           
+            <!-- Botón Inteligente 2: Cobro de $80 MXN conectado a Mercado Pago -->
+            <div>
+                <button onclick="comprarGuia('video_basico', '⚡ Desbloquear Video y Pasos', 80)" class="btn-action btn-blueprint" style="width:100%; border:1px solid #334155; cursor:pointer; padding:12px; font-weight:bold; border-radius:12px; background:#1e293b; color:#94a3b8;">⚡ Desbloquear Video y Pasos ($80 MXN)</button>
+            </div>
         </div>
 
     </main>
 
     <script>
-        // Este script vincula automáticamente tus clics con el usuario creado
+        // Guarda el nombre del usuario localmente
         function guardarSesionLocal() {
             const usuario = document.getElementById('inputNombre').value;
             if(usuario) localStorage.setItem('usuario_forgemind', usuario);
         }
 
-        function incrustarUsuarioEnBotones() {
-    const usuarioGuardado = localStorage.getItem('usuario_forgemind') || '';
-    // Avisa a los formularios de cobro quién está intentando comprar
-    const campo1 = document.getElementById('usuarioPay1');
-    const campo2 = document.getElementById('usuarioPay2');
-    if(campo1) campo1.value = usuarioGuardado;
-    if(campo2) campo2.value = usuarioGuardado;
-}
-// Ejecuta la revisión cada medio segundo automáticamente
-setInterval(incrustarUsuarioEnBotones, 500);
+        // FUNCIÓN MÁGICA CONECTADA A TU MERCADO PAGO REAL
+        async function comprarGuia(idGuia, nombreGuia, precioGuia) {
+            try {
+                // Deshabilitar el botón momentáneamente para evitar clics dobles
+                const usuarioLogueado = localStorage.getItem('usuario_forgemind') || 'Invitado';
+                
+                // Conectamos con la Ruta 2 de tu archivo server.js
+                const respuesta = await fetch('https://onrender.com', {
 
-                       
-            
-            
-            
-        
-      
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id_guia: idGuia,
+                        nombre_guia: nombreGuia,
+                        precio: precioGuia,
+                        usuario: usuarioLogueado
+                    })
+                });
+
+                const datos = await respuesta.json();
+
+                if (datos.init_point) {
+                    // Redirige al cliente a la pasarela segura de Mercado Pago
+                    window.location.href = datos.init_point;
+                } else {
+                    alert('⚠️ No se pudo generar el enlace de pago de Mercado Pago.');
+                }
+            } catch (error) {
+                console.error('Error al procesar pago:', error);
+                alert('❌ Error de conexión con la pasarela de cobros.');
+            }
+        }
     </script>
 </body>
 </html>
