@@ -69,19 +69,19 @@
                 const usuarioLogueado = localStorage.getItem('usuario_forgemind') || 'Invitado';
                 
                 // Conectamos con la Ruta 2 de tu archivo server.js
-                const respuesta = await fetch('https://onrender.com', {
-
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id_guia: idGuia,
-                        nombre_guia: nombreGuia,
-                        precio: precioGuia,
-                        usuario: usuarioLogueado
-                    })
-                });
+               const respuesta = await fetch('/api/crear-pago', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        id_guia: idGuia,
+        nombre_guia: nombreGuia,
+        precio: precioGuia,
+        usuario: usuarioLogueado
+    })
+});
+ 
 
                 const datos = await respuesta.json();
 
